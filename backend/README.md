@@ -38,7 +38,8 @@ Full-stack app: Express + Prisma API here; React UI in `../frontend/`, built int
 
    Or run `npm run dev` in `backend/` and `npm run dev` in `frontend/` in two terminals (frontend expects API on port 4000).
 
-5. Production-style single server: `cd backend && npm run build && npm start` — serves API and static UI from `public/`.
+5. Production-style single server: `cd backend && npm run build && npm start` — serves API and static UI from `public/`.  
+   `npm start` alone compiles the API (`prestart` → `build:server`) but **does not** build the React UI; run full `npm run build` once so `public/` exists.
 
 ## Database migrations
 

@@ -38,13 +38,13 @@ const projectColors = [
 const statusMeta: Record<TaskStatus, { label: string; tone: 'default' | 'subtle' | 'success' | 'danger' }> = {
   Todo: { label: 'To do', tone: 'subtle' },
   InProgress: { label: 'In progress', tone: 'default' },
-  Done: { label: 'Done', tone: 'success' }
+  Done: { label: 'Completed', tone: 'success' }
 };
 
 const priorityMeta: Record<TaskPriority, { label: string; className: string }> = {
-  Low: { label: 'Low', className: 'border-line/60 bg-transparent text-muted' },
-  Medium: { label: 'Medium', className: 'border-line/60 bg-panel2 text-text' },
-  High: { label: 'High', className: 'border-danger/25 bg-danger/10 text-danger' }
+  Low: { label: 'Low', className: 'border-line bg-panel2 text-muted' },
+  Medium: { label: 'Medium', className: 'border-cyan/30 bg-cyan/10 text-cyan' },
+  High: { label: 'High', className: 'border-danger/30 bg-danger/10 text-danger' }
 };
 
 type AuthMode = 'login' | 'signup';
@@ -104,10 +104,10 @@ const emptyMemberForm: MemberForm = {
 };
 
 const colorLabel: Record<Project['color'], string> = {
-  sand: 'Warm sand',
-  sage: 'Muted sage',
-  ember: 'Clay ember',
-  stone: 'Slate stone'
+  sand: 'Sand',
+  sage: 'Sage',
+  ember: 'Ember',
+  stone: 'Stone'
 };
 
 function initials(name: string) {
@@ -134,14 +134,14 @@ function isOverdue(task: Task) {
 function projectAccent(color: Project['color']) {
   switch (color) {
     case 'sage':
-      return 'bg-emerald-50 text-emerald-800 border-emerald-200';
+      return 'border-success/30 bg-success/15 text-success';
     case 'ember':
-      return 'bg-rose-50 text-rose-800 border-rose-200';
+      return 'border-danger/30 bg-danger/15 text-danger';
     case 'stone':
-      return 'bg-slate-100 text-slate-700 border-slate-200';
+      return 'border-line/60 bg-panel2/80 text-muted';
     case 'sand':
     default:
-      return 'bg-stone-100 text-stone-700 border-stone-200';
+      return 'border-accent/30 bg-accent/15 text-accent';
   }
 }
 
@@ -368,7 +368,7 @@ function App() {
       setIsMemberDialogOpen(false);
       setMemberForm(emptyMemberForm);
       await refreshWorkspace();
-      setNotice('Member invited successfully.');
+      setNotice('Team member invited successfully.');
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : 'Unable to invite member');
     } finally {
@@ -434,7 +434,7 @@ function App() {
         setSelectedProjectId(response.project.id);
       }
       setWorkspaceTab('board');
-      setNotice(`Demo member created: ${response.demoMember.email} / ${response.demoMember.password}`);
+      setNotice(`Demo account ready: ${response.demoMember.email} / ${response.demoMember.password}`);
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : 'Unable to seed demo data');
     } finally {
@@ -464,14 +464,12 @@ function App() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center px-6">
-        <Card className="w-full max-w-md">
-          <CardContent className="space-y-3 p-6 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl border border-line/50 bg-panel2 text-accent">
-              <Sparkles className="h-6 w-6" />
-            </div>
-            <p className="text-xl font-semibold tracking-tight">Loading workspace</p>
-            <p className="text-sm leading-6 text-muted">Preparing your projects, tasks, and dashboard metrics.</p>
+      <div className="flex min-h-screen items-center justify-center px-6 animate-fade-in">
+        <Card className="w-full max-w-sm shadow-card">
+          <CardContent className="space-y-3 p-8 text-center">
+            <div className="mx-auto h-10 w-10 animate-pulse rounded-md bg-accent/15" />
+            <p className="text-base font-semibold text-text">Loading workspace</p>
+            <p className="text-sm text-muted">Preparing your projects and dashboard.</p>
           </CardContent>
         </Card>
       </div>
@@ -480,69 +478,65 @@ function App() {
 
   if (!token || !user) {
     return (
-      <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
-        <div className="relative flex items-center overflow-hidden px-4 py-8 sm:px-6 sm:py-10 lg:px-12">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-transparent to-sky-50/80" />
-          <div className="absolute left-1/4 top-24 h-52 w-52 rounded-full bg-indigo-200/40 blur-3xl" />
-          <div className="absolute bottom-8 right-16 h-64 w-64 rounded-full bg-sky-200/35 blur-3xl" />
-          <div className="relative z-10 max-w-2xl space-y-8">
-            <Badge variant="subtle" className="w-fit rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider">
-              Team Task Manager
-            </Badge>
-            <div className="space-y-4">
-              <h1 className="max-w-xl text-4xl font-semibold tracking-tight text-text lg:text-6xl lg:leading-[1.08]">
-                Project control without the noise.
+      <div className="min-h-screen">
+        <div className="mx-auto grid min-h-screen max-w-6xl grid-cols-1 lg:grid-cols-[minmax(0,1fr)_22rem]">
+          <section className="flex flex-col justify-center px-6 py-12 lg:px-10 lg:py-16">
+            <div className="max-w-lg space-y-8 animate-slide-up">
+              <div>
+                <p className="text-2xs font-semibold uppercase tracking-widest text-accent">Ethara Workspace</p>
+              <h1 className="mt-3 text-display-sm font-bold tracking-tight text-text lg:text-display">
+                <span className="text-gradient">Coordinate work</span>
+                <br />
+                <span className="text-text">with clarity.</span>
               </h1>
-              <p className="max-w-xl text-lg leading-8 text-muted lg:text-xl">
-                A focused workspace for assigning work, tracking progress, and keeping teams aligned with clear role-based access.
+              <p className="mt-4 text-base leading-relaxed text-muted">
+                A professional environment for project planning, task assignment, and team accountability.
               </p>
             </div>
-            <div className="grid gap-4 sm:grid-cols-3">
+            <ul className="space-y-3 border-t border-line pt-6">
               {[
-                ['Projects', 'Organize shared work in one place.'],
-                ['Tasks', 'Assign, track, and close items with clarity.'],
-                ['Dashboard', 'See overdue work and progress at a glance.']
+                ['Project management', 'Organize initiatives with owners, members, and shared context.'],
+                ['Task tracking', 'Assign work, set priorities, and monitor status through completion.'],
+                ['Executive dashboard', 'Review overdue items, upcoming deadlines, and recent activity.']
               ].map(([title, text]) => (
-                <Card key={title} className="border-line/40 bg-panel/90 shadow-none">
-                  <CardContent className="space-y-1.5 p-4">
-                    <p className="font-medium">{title}</p>
-                    <p className="text-sm leading-6 text-muted">{text}</p>
-                  </CardContent>
-                </Card>
+                <li key={title} className="accent-bar">
+                  <p className="text-sm font-semibold text-text">{title}</p>
+                  <p className="mt-0.5 text-sm text-muted">{text}</p>
+                </li>
               ))}
+            </ul>
             </div>
-          </div>
-        </div>
+          </section>
 
-        <div className="flex items-center justify-center px-4 py-8 sm:px-6 sm:py-10">
-          <Card className="w-full max-w-xl">
-            <CardHeader>
-              <CardTitle>{authMode === 'signup' ? 'Create your workspace' : 'Welcome back'}</CardTitle>
+          <aside className="flex items-center border-t border-line bg-panel px-6 py-10 lg:border-l lg:border-t-0 lg:px-8">
+          <Card className="w-full border-0 bg-transparent shadow-none">
+            <CardHeader className="border-0 px-0 pt-0">
+              <CardTitle>{authMode === 'signup' ? 'Create account' : 'Sign in'}</CardTitle>
               <CardDescription>
                 {authMode === 'signup'
-                  ? 'Start as an admin or member, then create projects and invite your team.'
-                  : 'Pick up where you left off and continue managing your delivery board.'}
+                  ? 'Register as an administrator or member to begin managing projects.'
+                  : 'Enter your credentials to access your workspace.'}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="grid grid-cols-2 rounded-xl border border-line/50 bg-panel2 p-1">
+            <CardContent className="space-y-4 px-0 pb-0">
+              <div className="grid grid-cols-2 gap-0 rounded-md border border-line p-0.5">
                 <button
                   type="button"
                   onClick={() => setAuthMode('signup')}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition ${authMode === 'signup' ? 'bg-panel text-text shadow-sm' : 'text-muted'}`}
+                  className={`rounded-[5px] px-3 py-2 text-sm font-medium transition ${authMode === 'signup' ? 'bg-accent text-white' : 'text-muted hover:text-text'}`}
                 >
                   Sign up
                 </button>
                 <button
                   type="button"
                   onClick={() => setAuthMode('login')}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition ${authMode === 'login' ? 'bg-panel text-text shadow-sm' : 'text-muted'}`}
+                  className={`rounded-[5px] px-3 py-2 text-sm font-medium transition ${authMode === 'login' ? 'bg-accent text-white' : 'text-muted hover:text-text'}`}
                 >
                   Log in
                 </button>
               </div>
 
-              <form className="space-y-4" onSubmit={submitAuth}>
+              <form className="space-y-3" onSubmit={submitAuth}>
                 {authMode === 'signup' && (
                   <Input
                     placeholder="Full name"
@@ -553,7 +547,7 @@ function App() {
                 )}
                 <Input
                   type="email"
-                  placeholder="Email address"
+                  placeholder="Work email"
                   value={authForm.email}
                   onChange={(event) => setAuthForm((current) => ({ ...current, email: event.target.value }))}
                   required
@@ -569,7 +563,7 @@ function App() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-text">Role</label>
                     <select
-                      className="flex h-11 w-full rounded-xl border border-line/60 bg-panel px-4 text-sm text-text shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/25"
+                      className="flex h-10 w-full rounded-md border border-line bg-panel px-3 text-sm text-text focus-visible:border-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/15"
                       value={authForm.role}
                       onChange={(event) => setAuthForm((current) => ({ ...current, role: event.target.value as Role }))}
                     >
@@ -582,50 +576,51 @@ function App() {
                   </div>
                 )}
                 {error ? (
-                  <div className="flex items-start gap-2 rounded-xl border border-danger/25 bg-danger/10 px-4 py-3 text-sm text-danger">
+                  <div className="flex items-start gap-2 rounded-md border border-danger/30 bg-danger/10 px-3 py-2.5 text-sm text-danger">
                     <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                     <span>{error}</span>
                   </div>
                 ) : null}
                 <Button className="w-full" type="submit" disabled={saving}>
-                  {saving ? 'Please wait...' : authMode === 'signup' ? 'Create account' : 'Log in'}
+                  {saving ? 'Please wait…' : authMode === 'signup' ? 'Create account' : 'Sign in'}
                 </Button>
               </form>
             </CardContent>
           </Card>
+          </aside>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen bg-bg">
       {sidebarOpen ? (
         <button
           type="button"
           aria-label="Close navigation"
-          className="fixed inset-0 z-30 bg-slate-900/30 backdrop-blur-[1px] transition-opacity lg:hidden"
+          className="fixed inset-0 z-30 bg-bg/70 backdrop-blur-sm transition-opacity lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       ) : null}
 
-      <div className="mx-auto flex min-h-screen max-w-[1400px] flex-col gap-4 px-3 py-4 sm:px-4 sm:py-6 lg:flex-row lg:gap-8 lg:px-8">
+      <div className="mx-auto flex min-h-screen max-w-[1280px] flex-col gap-0 px-4 py-4 sm:px-6 lg:flex-row lg:gap-0 lg:px-8 lg:py-6">
         <aside
-          className={`fixed inset-y-0 left-0 z-40 max-h-[100dvh] w-[min(100%,20rem)] max-w-[calc(100vw-1rem)] flex-col overflow-y-auto overscroll-contain border-r border-line/50 bg-panel p-4 shadow-2xl sm:p-5 lg:sticky lg:top-6 lg:max-h-[calc(100dvh-3rem)] lg:w-64 lg:shrink-0 lg:rounded-2xl lg:border lg:border-line/50 lg:shadow-none ${sidebarOpen ? 'flex flex-col' : 'hidden lg:flex lg:flex-col'}`}
+          className={`fixed inset-y-0 left-0 z-40 max-h-[100dvh] w-[min(100%,17rem)] flex-col overflow-y-auto overscroll-contain border-r border-line bg-panel p-4 sm:p-5 lg:sticky lg:top-6 lg:max-h-[calc(100dvh-3rem)] lg:flex lg:w-56 lg:shrink-0 lg:rounded-lg lg:border lg:border-line lg:shadow-card ${sidebarOpen ? 'flex' : 'hidden lg:flex'}`}
         >
           <div className="flex items-center justify-between pb-5">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">Tasks</p>
-              <p className="text-lg font-semibold tracking-tight text-text">Overview</p>
+              <p className="text-2xs font-semibold uppercase tracking-widest text-accent">Ethara</p>
+              <p className="text-base font-semibold tracking-tight text-text">Workspace</p>
             </div>
             <button type="button" className="rounded-lg border border-line/60 bg-panel2 p-2 lg:hidden" onClick={() => setSidebarOpen(false)}>
               <Menu className="h-5 w-5" />
             </button>
           </div>
 
-          <div className="rounded-xl border border-line/50 bg-panel2/50 p-4">
+          <div className="rounded-md border border-line bg-panel2 p-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-line/50 bg-panel text-sm font-semibold text-text">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-accent/25 bg-accent/10 text-xs font-semibold text-accent">
                 {initials(user.name)}
               </div>
               <div className="min-w-0">
@@ -634,7 +629,7 @@ function App() {
               </div>
             </div>
             <div className="mt-3 flex items-center justify-between gap-2">
-              <Badge variant={user.role === 'Admin' ? 'success' : 'subtle'}>{user.role}</Badge>
+              <Badge variant={user.role === 'Admin' ? 'success' : 'subtle'}>{user.role === 'Admin' ? 'Admin' : 'Member'}</Badge>
               <Button variant="ghost" size="sm" onClick={logout} className="px-2 text-muted hover:text-text" aria-label="Log out">
                 <LogOut className="h-4 w-4" />
               </Button>
@@ -644,7 +639,7 @@ function App() {
           <div className="mt-5 flex gap-3">
             <div className="flex-1 rounded-xl border border-line/50 bg-panel2/40 px-3 py-2.5">
               <p className="text-xs text-muted">Projects</p>
-              <p className="text-xl font-semibold tabular-nums">{dashboard?.projects ?? 0}</p>
+              <p className="font-display text-2xl font-semibold tabular-nums">{dashboard?.projects ?? 0}</p>
             </div>
             <div className="flex-1 rounded-xl border border-line/50 bg-panel2/40 px-3 py-2.5">
               <p className="text-xs text-muted">Overdue</p>
@@ -654,11 +649,11 @@ function App() {
 
           <div className="mt-6 min-h-0 flex-1">
             <div className="mb-2 flex items-center justify-between">
-              <p className="text-sm font-medium text-text">Your projects</p>
+              <p className="text-sm font-medium text-text">Projects</p>
               {user.role === 'Admin' ? (
                 <Button size="sm" variant="ghost" className="h-8 px-2 text-xs" onClick={() => setIsProjectDialogOpen(true)}>
                   <CirclePlus className="h-3.5 w-3.5" />
-                  New
+                  Add
                 </Button>
               ) : null}
             </div>
@@ -672,16 +667,16 @@ function App() {
                       setSelectedProjectId(project.id);
                       setSidebarOpen(false);
                     }}
-                    className={`flex w-full items-center justify-between gap-2 rounded-xl border px-3 py-2.5 text-left text-sm transition ${
+                    className={`flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-sm transition ${
                       project.id === selectedProjectId
-                        ? 'border-accent/30 bg-accent text-white shadow-sm'
-                        : 'border-transparent bg-panel2/40 text-text hover:bg-panel2'
+                        ? 'border-accent/35 bg-accent/10 text-text shadow-sm ring-1 ring-accent/20'
+                        : 'border-transparent bg-panel2/50 text-text hover:border-line hover:bg-panel2'
                     }`}
                   >
                     <span className="min-w-0 truncate font-medium">{project.name}</span>
                     <span
-                      className={`shrink-0 rounded-md px-1.5 py-0.5 text-xs font-medium tabular-nums ${
-                        project.id === selectedProjectId ? 'bg-white/15 text-white' : 'bg-panel text-muted'
+                      className={`shrink-0 rounded-md px-1.5 py-0.5 font-mono text-xs font-medium tabular-nums ${
+                        project.id === selectedProjectId ? 'bg-accent/20 text-accent' : 'bg-panel text-muted'
                       }`}
                     >
                       {project.counts.tasks}
@@ -689,22 +684,22 @@ function App() {
                   </button>
                 ))
               ) : (
-                <p className="rounded-xl border border-dashed border-line/60 px-3 py-4 text-center text-sm text-muted">No projects yet.</p>
+                <p className="rounded-xl border border-dashed border-line px-3 py-4 text-center text-sm text-muted">No projects yet</p>
               )}
             </div>
           </div>
         </aside>
 
-        <main className="flex min-h-0 min-w-0 w-full flex-1 flex-col gap-5 sm:gap-6">
-          <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line/40 pb-4">
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col gap-4 border-line bg-bg p-4 sm:gap-5 sm:p-6 lg:rounded-lg lg:border lg:bg-panel lg:p-6">
+          <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line pb-4">
             <div className="flex min-w-0 items-start gap-3">
               <button type="button" className="mt-0.5 rounded-lg border border-line/60 bg-panel p-2 lg:hidden" onClick={() => setSidebarOpen(true)}>
                 <Menu className="h-5 w-5" />
               </button>
               <div className="min-w-0">
-                <p className="text-xs font-medium text-muted">Workspace</p>
-                <h1 className="truncate text-2xl font-semibold tracking-tight text-text lg:text-3xl">
-                  {selectedProject?.name ?? 'Choose a project'}
+                <p className="text-xs font-medium text-muted">Current project</p>
+                <h1 className="truncate text-xl font-semibold tracking-tight text-text lg:text-2xl">
+                  {selectedProject?.name ?? 'Select a project'}
                 </h1>
               </div>
             </div>
@@ -736,7 +731,7 @@ function App() {
           ) : null}
 
           <Tabs value={workspaceTab} onValueChange={(value) => setWorkspaceTab(value as WorkspaceTab)} className="min-w-0">
-            <TabsList className="flex h-auto min-h-11 w-full flex-wrap gap-1 rounded-xl border border-line/50 bg-panel2/80 p-1">
+            <TabsList className="w-full">
               <TabsTrigger value="dashboard" className="min-w-[8.5rem] flex-1 gap-2">
                 <LayoutDashboard className="h-4 w-4 shrink-0" />
                 Dashboard
@@ -765,8 +760,8 @@ function App() {
                       { label: 'Due soon', value: dashboard?.dueSoon ?? 0, icon: Clock3 },
                       { label: 'Completion', value: `${dashboard?.completionRate ?? 0}%`, icon: CheckCircle2 }
                     ].map((item) => (
-                      <div key={item.label} className="flex items-center gap-3 rounded-xl border border-line/40 bg-panel2/30 px-4 py-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-line/50 bg-panel text-accent">
+                      <div key={item.label} className="flex flex-col gap-2 rounded-md border border-line bg-panel2/60 p-4 transition hover:border-accent/30">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-md border border-accent/20 bg-accent/10 text-accent">
                           <item.icon className="h-5 w-5" />
                         </div>
                         <div className="min-w-0">
@@ -791,16 +786,16 @@ function App() {
                       <>
                         <Button variant="subtle" size="sm" onClick={() => setWorkspaceTab('board')}>
                           <LayoutGrid className="h-4 w-4" />
-                          Open board
+                          Board
                         </Button>
                         <Button variant="subtle" size="sm" onClick={() => setWorkspaceTab('tasks')}>
                           <SquarePen className="h-4 w-4" />
-                          Task list
+                          All tasks
                         </Button>
                         {canManageSelectedProject ? (
                           <Button variant="subtle" size="sm" onClick={() => setWorkspaceTab('team')}>
                             <Users className="h-4 w-4" />
-                            Team & invites
+                            Team
                           </Button>
                         ) : null}
                       </>
@@ -811,8 +806,8 @@ function App() {
 
               <Card className="border-line/40 shadow-none">
                 <CardHeader>
-                  <CardTitle>Recent updates</CardTitle>
-                  <CardDescription>Latest activity across all projects you can access.</CardDescription>
+                  <CardTitle>Recent activity</CardTitle>
+                  <CardDescription>Latest updates across accessible projects.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {(dashboard?.recentTasks ?? []).length ? (
@@ -835,7 +830,7 @@ function App() {
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-sm text-muted">No recent task updates yet.</p>
+                    <p className="text-sm text-muted">No recent task updates.</p>
                   )}
                 </CardContent>
               </Card>
@@ -843,11 +838,11 @@ function App() {
 
             <TabsContent value="board">
               {selectedProject ? (
-                <div className="rounded-2xl border border-line/40 bg-panel p-4 shadow-none sm:p-5">
+                <div className="rounded-2xl border border-line/90 bg-panel p-5 shadow-card sm:p-6">
                   <div className="flex flex-wrap items-start justify-between gap-3 border-b border-line/40 pb-4 sm:gap-4">
                     <div className="min-w-0">
                       <h2 className="text-xl font-semibold tracking-tight">{selectedProject.name}</h2>
-                      <p className="mt-1 text-sm text-muted">{selectedProject.description || 'No description yet.'}</p>
+                      <p className="mt-1 text-sm text-muted">{selectedProject.description || 'No description provided.'}</p>
                     </div>
                     <div className="flex shrink-0 flex-wrap gap-2">
                       <Badge className={projectAccent(selectedProject.color)}>{colorLabel[selectedProject.color]}</Badge>
@@ -863,7 +858,7 @@ function App() {
                       <dd className="font-medium text-text">{selectedProject.owner.name}</dd>
                     </div>
                     <div>
-                      <dt className="text-muted">Members</dt>
+                      <dt className="text-muted">Team</dt>
                       <dd className="font-medium tabular-nums">{selectedProject.members.length}</dd>
                     </div>
                     <div>
@@ -888,7 +883,7 @@ function App() {
 
                   <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
                     {(['Todo', 'InProgress', 'Done'] as TaskStatus[]).map((status) => (
-                      <div key={status} className="flex min-h-[12rem] flex-col rounded-xl border border-line/40 bg-panel2/20 p-4">
+                      <div key={status} className="flex min-h-[12rem] flex-col rounded-2xl border border-line/80 bg-panel2/40 p-4">
                         <div className="mb-3 flex items-baseline justify-between gap-2">
                           <h3 className="text-sm font-semibold text-text">{statusMeta[status].label}</h3>
                           <span className="text-xs tabular-nums text-muted">{groupedTasks[status].length}</span>
@@ -907,7 +902,7 @@ function App() {
                             ))
                           ) : (
                             <p className="flex flex-1 items-center justify-center rounded-lg border border-dashed border-line/50 px-2 py-6 text-center text-xs text-muted">
-                              Empty
+                              No tasks in this column
                             </p>
                           )}
                         </div>
@@ -918,7 +913,7 @@ function App() {
               ) : (
                 <EmptyState
                   title="No project selected"
-                  description="Choose a project in the sidebar, create one as an admin, or seed demo data."
+                  description="Choose a project from the sidebar, create one, or seed demo data."
                   actionLabel={user.role === 'Admin' ? 'Create project' : 'Seed demo data'}
                   onAction={user.role === 'Admin' ? () => setIsProjectDialogOpen(true) : () => void seedDemo()}
                 />
@@ -965,7 +960,7 @@ function App() {
                               <p>Due {formatDate(task.dueDate)}</p>
                             </div>
                             <select
-                              className="h-11 w-full rounded-xl border border-line/60 bg-panel px-3 text-sm text-text lg:max-w-none"
+                              className="h-11 w-full rounded-xl border border-line bg-panel px-3 text-sm text-text lg:max-w-none"
                               value={task.status}
                               onChange={(event) => void updateTask(task.id, { status: event.target.value as TaskStatus })}
                             >
@@ -984,9 +979,9 @@ function App() {
                         ))
                     ) : (
                       <div className="rounded-xl border border-dashed border-line/50 bg-panel2/20 p-10 text-center">
-                        <p className="text-xl font-semibold">No tasks yet</p>
-                        <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-muted">
-                          Add the first work item for this project and use statuses to keep progress visible.
+                        <p className="font-display text-2xl font-semibold">No tasks yet</p>
+                        <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-muted">
+                          Add the first task for this project to begin tracking progress.
                         </p>
                       </div>
                     )}
@@ -994,8 +989,8 @@ function App() {
                 </Card>
               ) : (
                 <EmptyState
-                  title="Choose a project first"
-                  description="Tasks live inside projects, so pick one from the sidebar before adding or updating work."
+                  title="Select a project"
+                  description="Tasks are organized within projects. Select one from the sidebar to continue."
                   actionLabel={user.role === 'Admin' ? 'Create project' : 'Seed demo data'}
                   onAction={user.role === 'Admin' ? () => setIsProjectDialogOpen(true) : () => void seedDemo()}
                 />
@@ -1009,7 +1004,7 @@ function App() {
                     <CardHeader className="flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div className="min-w-0">
                         <CardTitle>Team members</CardTitle>
-                        <CardDescription>Owners and invited collaborators are listed here.</CardDescription>
+                        <CardDescription>Owners and invited collaborators on this project.</CardDescription>
                       </div>
                       {canManageSelectedProject ? (
                         <Button variant="subtle" className="w-full shrink-0 sm:w-auto" onClick={() => setIsMemberDialogOpen(true)}>
@@ -1031,7 +1026,7 @@ function App() {
                             </div>
                           </div>
                           <Badge variant={member.role === 'Admin' ? 'success' : 'subtle'} className="w-fit sm:shrink-0">
-                            {member.role}
+                            {member.role === 'Admin' ? 'Admin' : 'Member'}
                           </Badge>
                         </div>
                       ))}
@@ -1040,29 +1035,29 @@ function App() {
 
                   <Card>
                     <CardHeader>
-                      <CardTitle>Access rules</CardTitle>
-                      <CardDescription>Role-based behavior baked into the app logic.</CardDescription>
+                      <CardTitle>Access permissions</CardTitle>
+                      <CardDescription>Role-based behavior within the application.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3 text-sm leading-6 text-muted">
-                      <div className="rounded-xl border border-line/40 bg-panel2/25 p-4">
-                        <p className="text-sm font-semibold text-text">Admin</p>
-                        <p className="mt-2 text-sm leading-relaxed text-muted">Create projects, invite members, reassign tasks, full task access.</p>
+                      <div className="rounded-2xl border border-line/80 bg-panel2/40 p-4">
+                        <p className="font-display text-base font-semibold text-text">Admin</p>
+                        <p className="mt-2 text-sm leading-relaxed text-muted">Create projects, invite members, reassign tasks, and manage all work items.</p>
                       </div>
-                      <div className="rounded-xl border border-line/40 bg-panel2/25 p-4">
-                        <p className="text-sm font-semibold text-text">Member</p>
-                        <p className="mt-2 text-sm leading-relaxed text-muted">See assigned projects, add tasks where allowed, update own items.</p>
+                      <div className="rounded-2xl border border-line/80 bg-panel2/40 p-4">
+                        <p className="font-display text-base font-semibold text-text">Member</p>
+                        <p className="mt-2 text-sm leading-relaxed text-muted">Access assigned projects, create tasks where permitted, and update owned items.</p>
                       </div>
-                      <div className="rounded-xl border border-line/40 bg-panel2/25 p-4">
-                        <p className="text-sm font-semibold text-text">Dashboard</p>
-                        <p className="mt-2 text-sm leading-relaxed text-muted">Open work, overdue, due soon, and recent activity.</p>
+                      <div className="rounded-2xl border border-line/80 bg-panel2/40 p-4">
+                        <p className="font-display text-base font-semibold text-text">Dashboard</p>
+                        <p className="mt-2 text-sm leading-relaxed text-muted">Overview of open work, overdue items, upcoming deadlines, and recent changes.</p>
                       </div>
                     </CardContent>
                   </Card>
                 </div>
               ) : (
                 <EmptyState
-                  title="No team loaded"
-                  description="Add a project first, or seed demo data to see invite and membership management in action."
+                  title="Team awaits"
+                  description="Add a project first, or seed demo data to explore team management."
                   actionLabel={user.role === 'Admin' ? 'Create project' : 'Seed demo data'}
                   onAction={user.role === 'Admin' ? () => setIsProjectDialogOpen(true) : () => void seedDemo()}
                 />
@@ -1075,20 +1070,20 @@ function App() {
       <Dialog open={isProjectDialogOpen} onOpenChange={setIsProjectDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create a project</DialogTitle>
-            <DialogDescription>Set up a new workspace and start assigning work immediately.</DialogDescription>
+            <DialogTitle>Create project</DialogTitle>
+            <DialogDescription>Set up a new project workspace and begin assigning work.</DialogDescription>
           </DialogHeader>
           <form className="space-y-4" onSubmit={createProject}>
             <Input placeholder="Project name" value={projectForm.name} onChange={(event) => setProjectForm((current) => ({ ...current, name: event.target.value }))} required />
             <Textarea
-              placeholder="Short description"
+              placeholder="Brief description"
               value={projectForm.description}
               onChange={(event) => setProjectForm((current) => ({ ...current, description: event.target.value }))}
             />
             <div className="space-y-2">
-              <label className="text-sm font-medium">Theme</label>
+              <label className="text-sm font-medium">Color theme</label>
               <select
-                className="flex h-11 w-full rounded-xl border border-line/60 bg-panel px-4 text-sm text-text"
+                className="flex h-11 w-full rounded-xl border border-line bg-panel px-4 text-sm text-text"
                 value={projectForm.color}
                 onChange={(event) => setProjectForm((current) => ({ ...current, color: event.target.value as Project['color'] }))}
               >
@@ -1116,8 +1111,8 @@ function App() {
       <Dialog open={isTaskDialogOpen} onOpenChange={setIsTaskDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add a task</DialogTitle>
-            <DialogDescription>Track work inside the selected project with a clear owner and status.</DialogDescription>
+            <DialogTitle>Add task</DialogTitle>
+            <DialogDescription>Define task details, assignee, and initial status.</DialogDescription>
           </DialogHeader>
           <form className="space-y-4" onSubmit={createTask}>
             <Input placeholder="Task title" value={taskForm.title} onChange={(event) => setTaskForm((current) => ({ ...current, title: event.target.value }))} required />
@@ -1130,7 +1125,7 @@ function App() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Status</label>
                 <select
-                  className="flex h-11 w-full rounded-xl border border-line/60 bg-panel px-4 text-sm text-text"
+                  className="flex h-11 w-full rounded-xl border border-line bg-panel px-4 text-sm text-text"
                   value={taskForm.status}
                   onChange={(event) => setTaskForm((current) => ({ ...current, status: event.target.value as TaskStatus }))}
                 >
@@ -1144,7 +1139,7 @@ function App() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Priority</label>
                 <select
-                  className="flex h-11 w-full rounded-xl border border-line/60 bg-panel px-4 text-sm text-text"
+                  className="flex h-11 w-full rounded-xl border border-line bg-panel px-4 text-sm text-text"
                   value={taskForm.priority}
                   onChange={(event) => setTaskForm((current) => ({ ...current, priority: event.target.value as TaskPriority }))}
                 >
@@ -1171,7 +1166,7 @@ function App() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Assignee</label>
                 <select
-                  className="flex h-11 w-full rounded-xl border border-line/60 bg-panel px-4 text-sm text-text"
+                  className="flex h-11 w-full rounded-xl border border-line bg-panel px-4 text-sm text-text"
                   value={taskForm.assigneeId}
                   onChange={(event) => setTaskForm((current) => ({ ...current, assigneeId: event.target.value }))}
                 >
@@ -1200,15 +1195,15 @@ function App() {
       <Dialog open={isMemberDialogOpen} onOpenChange={setIsMemberDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Invite a teammate</DialogTitle>
-            <DialogDescription>Invite an existing user by email and set their project-level role.</DialogDescription>
+            <DialogTitle>Invite to the crew</DialogTitle>
+            <DialogDescription>Invite an existing user by email and set their project role.</DialogDescription>
           </DialogHeader>
           <form className="space-y-4" onSubmit={inviteMember}>
-            <Input placeholder="Teammate email" value={memberForm.email} onChange={(event) => setMemberForm((current) => ({ ...current, email: event.target.value }))} required />
+            <Input placeholder="colleague@company.com" value={memberForm.email} onChange={(event) => setMemberForm((current) => ({ ...current, email: event.target.value }))} required />
             <div className="space-y-2">
               <label className="text-sm font-medium">Project role</label>
               <select
-                className="flex h-11 w-full rounded-xl border border-line/60 bg-panel px-4 text-sm text-text"
+                className="flex h-11 w-full rounded-xl border border-line bg-panel px-4 text-sm text-text"
                 value={memberForm.role}
                 onChange={(event) => setMemberForm((current) => ({ ...current, role: event.target.value as Role }))}
               >
@@ -1226,7 +1221,7 @@ function App() {
                 </Button>
               </DialogClose>
               <Button type="submit" disabled={saving}>
-                Invite member
+                Send invitation
               </Button>
             </DialogFooter>
           </form>
@@ -1253,7 +1248,7 @@ function TaskCard({
   const canEdit = canManage || task.creatorId === currentUser.id || task.assigneeId === currentUser.id;
 
   return (
-    <div className={`rounded-xl border p-4 ${overdue ? 'border-danger/25 bg-danger/10' : 'border-line/40 bg-panel'}`}>
+    <div className={`rounded-xl border p-4 shadow-sm transition hover:border-accent/25 ${overdue ? 'border-danger/30 bg-danger/8' : 'border-line/80 bg-panel'}`}>
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <p className="min-w-0 flex-1 font-medium leading-snug">{task.title}</p>
@@ -1276,7 +1271,7 @@ function TaskCard({
       {canEdit ? (
         <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
           <select
-            className="h-10 w-full flex-1 rounded-xl border border-line/60 bg-panel px-3 text-sm text-text sm:min-w-0"
+            className="h-10 w-full flex-1 rounded-xl border border-line bg-panel px-3 text-sm text-text sm:min-w-0"
             value={task.status}
             onChange={(event) => void onStatusChange(task.id, { status: event.target.value as TaskStatus })}
           >
@@ -1307,14 +1302,14 @@ function EmptyState({
   onAction: () => void;
 }) {
   return (
-    <Card className="border-dashed border-line/50 bg-panel2/20 shadow-none">
-      <CardContent className="space-y-4 p-6 text-center sm:p-10">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl border border-line/50 bg-panel text-accent">
-          <LayoutDashboard className="h-6 w-6" />
+    <Card className="border-dashed border-line bg-panel2/30 shadow-none">
+      <CardContent className="space-y-5 p-8 text-center sm:p-12">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-md border border-line bg-panel2">
+          <LayoutDashboard className="h-5 w-5 text-accent" />
         </div>
         <div className="space-y-2">
-          <p className="text-2xl font-semibold tracking-tight text-text">{title}</p>
-          <p className="mx-auto max-w-2xl text-sm leading-6 text-muted">{description}</p>
+          <p className="text-lg font-semibold tracking-tight text-text">{title}</p>
+          <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted">{description}</p>
         </div>
         <Button onClick={onAction}>{actionLabel}</Button>
       </CardContent>

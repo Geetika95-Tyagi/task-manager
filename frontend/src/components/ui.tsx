@@ -6,19 +6,19 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../utils/cn';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-accent text-white shadow-sm hover:bg-accent2',
-        subtle: 'border-line/60 bg-panel text-text hover:bg-panel2',
+        default: 'border-transparent bg-accent text-white shadow-glow hover:bg-accent2',
+        subtle: 'border-line bg-panel text-text hover:border-accent/35 hover:bg-panel2',
         ghost: 'border-transparent bg-transparent text-muted hover:bg-panel2 hover:text-text',
-        danger: 'border-transparent bg-danger text-white hover:opacity-95'
+        danger: 'border-danger/30 bg-danger/10 text-danger hover:bg-danger/15'
       },
       size: {
-        default: 'h-11 px-4',
-        sm: 'h-9 px-3 text-xs',
-        lg: 'h-12 px-6 text-base'
+        default: 'h-10 px-4',
+        sm: 'h-8 px-3 text-xs',
+        lg: 'h-11 px-6'
       }
     },
     defaultVariants: {
@@ -38,12 +38,12 @@ export const Button = React.forwardRef<
 Button.displayName = 'Button';
 
 export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('rounded-2xl border border-line/50 bg-panel/95 shadow-soft', className)} {...props} />
+  <div ref={ref} className={cn('rounded-lg border border-line bg-panel shadow-card', className)} {...props} />
 ));
 Card.displayName = 'Card';
 
 export const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('flex flex-col gap-1.5 border-b border-line/40 px-5 py-4', className)} {...props} />
+  <div ref={ref} className={cn('flex flex-col gap-0.5 border-b border-line px-5 py-4', className)} {...props} />
 ));
 CardHeader.displayName = 'CardHeader';
 
@@ -53,17 +53,17 @@ export const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes
 CardContent.displayName = 'CardContent';
 
 export const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('border-t border-line/50 px-5 py-4', className)} {...props} />
+  <div ref={ref} className={cn('border-t border-line px-5 py-3', className)} {...props} />
 ));
 CardFooter.displayName = 'CardFooter';
 
 export const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(({ className, ...props }, ref) => (
-  <h3 ref={ref} className={cn('text-lg font-semibold tracking-tight text-text', className)} {...props} />
+  <h3 ref={ref} className={cn('text-base font-semibold tracking-tight text-text', className)} {...props} />
 ));
 CardTitle.displayName = 'CardTitle';
 
 export const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn('text-sm leading-6 text-muted', className)} {...props} />
+  <p ref={ref} className={cn('text-sm leading-relaxed text-muted', className)} {...props} />
 ));
 CardDescription.displayName = 'CardDescription';
 
@@ -71,7 +71,7 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
   <input
     ref={ref}
     className={cn(
-      'flex h-11 w-full rounded-xl border border-line/60 bg-panel px-4 text-sm text-text shadow-sm transition-colors placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-50',
+      'flex h-10 w-full rounded-md border border-line bg-panel px-3 text-sm text-text transition-colors placeholder:text-muted/60 focus-visible:border-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/15 disabled:cursor-not-allowed disabled:opacity-50',
       className
     )}
     {...props}
@@ -84,7 +84,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTML
     <textarea
       ref={ref}
       className={cn(
-        'flex min-h-[120px] w-full rounded-xl border border-line/60 bg-panel px-4 py-3 text-sm text-text shadow-sm transition-colors placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-50',
+        'flex min-h-[100px] w-full rounded-md border border-line bg-panel px-3 py-2.5 text-sm text-text transition-colors placeholder:text-muted/60 focus-visible:border-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/15 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
       {...props}
@@ -93,13 +93,13 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTML
 );
 Textarea.displayName = 'Textarea';
 
-const badgeVariants = cva('inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 text-xs font-medium', {
+const badgeVariants = cva('inline-flex shrink-0 items-center rounded px-2 py-0.5 text-2xs font-medium uppercase tracking-wide', {
   variants: {
     variant: {
-      default: 'border-line/80 bg-panel2 text-text',
-      subtle: 'border-line/60 bg-transparent text-muted',
-      success: 'border-success/20 bg-success/10 text-success',
-      danger: 'border-danger/20 bg-danger/10 text-danger'
+      default: 'border border-line bg-panel2 text-text',
+      subtle: 'border border-line/80 bg-transparent text-muted',
+      success: 'border-success/30 bg-success/10 text-success',
+      danger: 'border-danger/30 bg-danger/10 text-danger'
     }
   },
   defaultVariants: {
@@ -112,7 +112,7 @@ export const Badge = ({ className, variant, ...props }: React.HTMLAttributes<HTM
 );
 
 export const Separator = ({ className, ...props }: React.HTMLAttributes<HTMLHRElement>) => (
-  <hr className={cn('border-line/70', className)} {...props} />
+  <hr className={cn('border-line', className)} {...props} />
 );
 
 export const Dialog = DialogPrimitive.Root;
@@ -124,11 +124,7 @@ export const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
-    ref={ref}
-    className={cn('fixed inset-0 z-50 bg-slate-900/45 backdrop-blur-[2px]', className)}
-    {...props}
-  />
+  <DialogPrimitive.Overlay ref={ref} className={cn('fixed inset-0 z-50 bg-text/25 backdrop-blur-[2px]', className)} {...props} />
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
@@ -141,7 +137,7 @@ export const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed left-1/2 top-1/2 z-50 grid max-h-[min(90dvh,44rem)] w-[92vw] max-w-2xl -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto rounded-2xl border border-line/50 bg-panel p-6 shadow-soft outline-none',
+        'fixed left-1/2 top-1/2 z-50 grid max-h-[min(90dvh,40rem)] w-[94vw] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto rounded-lg border border-line bg-panel p-6 shadow-soft outline-none animate-slide-up',
         className
       )}
       {...props}
@@ -153,14 +149,14 @@ export const DialogContent = React.forwardRef<
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 export const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col gap-2', className)} {...props} />
+  <div className={cn('flex flex-col gap-1', className)} {...props} />
 );
 
 export const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title ref={ref} className={cn('text-xl font-semibold tracking-tight text-text', className)} {...props} />
+  <DialogPrimitive.Title ref={ref} className={cn('text-lg font-semibold tracking-tight text-text', className)} {...props} />
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
@@ -168,12 +164,12 @@ export const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description ref={ref} className={cn('text-sm leading-6 text-muted', className)} {...props} />
+  <DialogPrimitive.Description ref={ref} className={cn('text-sm leading-relaxed text-muted', className)} {...props} />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col-reverse gap-3 sm:flex-row sm:justify-end', className)} {...props} />
+  <div className={cn('flex flex-col-reverse gap-2 pt-1 sm:flex-row sm:justify-end', className)} {...props} />
 );
 
 export const Tabs = TabsPrimitive.Root;
@@ -183,7 +179,10 @@ export const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn('flex h-11 w-full min-w-0 items-center gap-1 overflow-x-auto rounded-xl border border-line/50 bg-panel2/80 p-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden', className)}
+    className={cn(
+      'inline-flex h-10 w-full min-w-0 items-center gap-0 overflow-x-auto border-b border-line [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+      className
+    )}
     {...props}
   />
 ));
@@ -196,7 +195,7 @@ export const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'inline-flex flex-1 min-w-0 items-center justify-center rounded-lg px-3 py-2 text-sm font-medium text-muted transition-all data-[state=active]:bg-panel data-[state=active]:text-text data-[state=active]:shadow-sm data-[state=active]:ring-1 data-[state=active]:ring-line/40',
+      'inline-flex h-10 min-w-0 flex-1 items-center justify-center gap-2 border-b-2 border-transparent px-4 text-sm font-medium text-muted transition-colors data-[state=active]:border-accent data-[state=active]:text-accent',
       className
     )}
     {...props}
@@ -208,6 +207,6 @@ export const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
 >(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content ref={ref} className={cn('mt-6 outline-none', className)} {...props} />
+  <TabsPrimitive.Content ref={ref} className={cn('mt-5 animate-fade-in outline-none', className)} {...props} />
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;

@@ -1,20 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg: 220 18% 97%;
+  --bg: 270 28% 97%;
   --panel: 0 0% 100%;
-  --panel-2: 220 14% 95%;
-  --text: 222 40% 12%;
-  --muted: 215 14% 46%;
-  --line: 214 18% 88%;
-  --accent: 239 58% 53%;
-  --accent-hover: 239 52% 45%;
-  --danger: 350 72% 48%;
-  --success: 152 55% 36%;
+  --panel-2: 270 22% 94%;
+  --text: 268 18% 14%;
+  --muted: 268 10% 44%;
+  --line: 270 16% 88%;
+  --accent: 262 56% 52%;
+  --accent-hover: 262 56% 46%;
+  --accent-glow: 262 56% 52%;
+  --violet: 280 48% 58%;
+  --danger: 0 62% 50%;
+  --success: 152 36% 36%;
 }
 
 * {
@@ -24,6 +26,7 @@
 html {
   min-height: 100%;
   background: hsl(var(--bg));
+  color-scheme: light;
 }
 
 body {
@@ -34,8 +37,9 @@ body {
   padding-right: env(safe-area-inset-right);
   padding-bottom: env(safe-area-inset-bottom);
   color: hsl(var(--text));
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-feature-settings: 'kern' 1, 'liga' 1;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
   background: transparent;
   -webkit-font-smoothing: antialiased;
 }
@@ -45,17 +49,21 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
+  z-index: 0;
   background:
-    radial-gradient(ellipse 100% 80% at 0% -20%, hsl(239 58% 53% / 0.07), transparent 50%),
-    radial-gradient(ellipse 80% 60% at 100% 0%, hsl(199 80% 45% / 0.06), transparent 45%);
+    radial-gradient(ellipse 70% 55% at 0% 0%, hsl(var(--accent) / 0.11), transparent 50%),
+    radial-gradient(ellipse 55% 45% at 100% 0%, hsl(var(--violet) / 0.09), transparent 45%),
+    linear-gradient(180deg, hsl(var(--bg)), hsl(270 24% 95%));
 }
 
 #root {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
 }
 
 ::selection {
-  color: white;
+  color: hsl(0 0% 100%);
   background: hsl(var(--accent));
 }
 
@@ -64,4 +72,20 @@ textarea,
 select,
 button {
   font: inherit;
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-accent to-[hsl(var(--violet))] bg-clip-text text-transparent;
+  }
+
+  .glow-ring {
+    box-shadow:
+      0 0 0 1px hsl(var(--line)),
+      0 12px 40px -16px hsl(var(--accent) / 0.18);
+  }
+
+  .accent-bar {
+    @apply border-l-[3px] border-l-accent pl-5;
+  }
 }
