@@ -27,20 +27,32 @@ From repo root:
 
 The API serves the Vite build from frontend/dist when NODE_ENV=production.
 
-Railway deployment (mandatory for submission)
---------------------------------------------
-1) Create a new Railway project and add the PostgreSQL plugin.
+Railway deployment (single project — frontend + backend)
+--------------------------------------------------------
+1) Push this repo to GitHub.
 
-2) Create a Web Service from this GitHub repo (root directory).
+2) railway.app → New Project → Deploy from GitHub repo (this repository).
 
-3) In the Web Service Variables, set:
-   - DATABASE_URL = (copy from the Railway Postgres service, same as PG provides)
-   - JWT_SECRET   = long random string
-   - NODE_ENV     = production
+3) Add PostgreSQL to the same project (New → Database → PostgreSQL).
 
-4) Railway will use nixpacks.toml: install deps, run prisma migrate deploy, build frontend + backend, start the API.
+4) Add / open the Web Service → Settings:
+   - Root Directory: leave EMPTY (repository root, not backend/)
+   - Builder: Nixpacks (uses /nixpacks.toml at repo root)
 
-5) After deploy, open the generated public URL and verify /api/health returns {"ok":true}.
+5) Web Service → Variables (required):
+   - DATABASE_URL  = copy from PostgreSQL service (Reference variable)
+   - JWT_SECRET    = long random string (32+ characters)
+   - NODE_ENV      = production
+
+6) Deploy. Build installs backend + frontend, builds UI into backend/public,
+   compiles API to backend/dist. Start runs prisma migrate deploy then node.
+
+7) Verify: https://YOUR-APP.up.railway.app/api/health → {"ok":true}
+   Open the same URL in a browser for the React app (no separate frontend URL).
+
+Local production test (optional):
+  cd backend && npm run build && set NODE_ENV=production && npm start
+  Open http://localhost:4000
 
 Role rules (summary)
 --------------------

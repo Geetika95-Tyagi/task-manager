@@ -1,10 +1,10 @@
 {
-  "name": "etharaai-assignment",
+  "name": "ethara-assignment",
   "private": true,
-  "description": "Monorepo root for deploy: install/build/start delegate to backend (which builds the React app into backend/public).",
+  "description": "Monorepo: Railway deploys one service from repo root; backend serves API + frontend build from backend/public.",
   "scripts": {
     "dev": "cd backend && npm run dev:all",
-    "build": "cd backend && npm install && npm run build",
+    "build": "cd backend && npm run build",
     "start": "cd backend && npm start",
     "db:migrate": "cd backend && npm run migrate:deploy"
   },

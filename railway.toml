@@ -1,8 +1,12 @@
+# Deploy this repo from the repository root (leave Root Directory empty in Railway).
+# Do NOT set Root Directory to backend/ unless you use backend/railway.toml instead.
+
 [build]
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "npm start"
+startCommand = "cd backend && npm start"
 healthcheckPath = "/api/health"
-healthcheckTimeout = 100
+healthcheckTimeout = 120
 restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

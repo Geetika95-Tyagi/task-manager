@@ -1,9 +1,12 @@
+# Alternative: set Railway Root Directory to `backend` and use this file.
+# The full repo is still cloned; ../frontend is used during build.
+
 [build]
-builder = "nixpacks"
+builder = "NIXPACKS"
 
 [deploy]
 startCommand = "npm start"
 healthcheckPath = "/api/health"
-healthcheckTimeout = 100
+healthcheckTimeout = 120
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10

@@ -11,6 +11,18 @@ import { Prisma, Role, TaskPriority, TaskStatus, type User } from '@prisma/clien
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+if (isProduction && !process.env.DATABASE_URL) {
+  console.error('DATABASE_URL is required in production. Add a PostgreSQL database on Railway and link DATABASE_URL.');
+  process.exit(1);
+}
+
+if (isProduction && (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'team-task-manager-secret')) {
+  console.error('JWT_SECRET must be set to a long random string in production.');
+  process.exit(1);
+}
+
 const app = express();
 const port = Number(process.env.PORT ?? 4000);
 const jwtSecret = process.env.JWT_SECRET ?? 'team-task-manager-secret';
@@ -901,8 +913,8 @@ const start = async () => {
     response.status(404).json({ error: 'Not found' });
   });
 
-  app.listen(port, () => {
-    console.log(`Team Task Manager API running on port ${port}`);
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`Ethara running on port ${port} (API + static UI)`);
   });
 };
 

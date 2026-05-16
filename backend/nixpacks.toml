@@ -1,8 +1,14 @@
+# Use when Railway Root Directory is set to `backend`.
+# Recommended: deploy from repo root and use /nixpacks.toml instead.
+
 [phases.setup]
 nixPkgs = ["nodejs_22"]
 
 [phases.install]
-cmds = ["npm install"]
+cmds = [
+  "npm ci",
+  "cd ../frontend && npm ci"
+]
 
 [phases.build]
 cmds = ["npm run build"]

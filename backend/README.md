@@ -68,11 +68,14 @@ Migrations live in `prisma/migrations/`. Production and local `npm start` run **
 | `npm run migrate:reset` | Drop data and re-apply all migrations |
 | `npm run db:push` | Emergency schema push without migrations |
 
-## Railway
+## Railway (single service: API + UI)
 
-1. In Railway, set the service **Root Directory** to `backend` (this folder).
-2. Add PostgreSQL and set `DATABASE_URL` and `JWT_SECRET` on the service.
-3. Default Nixpacks flow: `npm install`, `npm run build`, `npm start` (see `railway.toml` here).
+Deploy from the **repository root** (not this folder). See the root `railway.toml` and `nixpacks.toml`.
+
+1. Create one Railway project with a **Web Service** (GitHub repo) and a **PostgreSQL** database.
+2. Leave **Root Directory** empty (repo root).
+3. Set variables on the Web Service: `DATABASE_URL` (from Postgres), `JWT_SECRET`, `NODE_ENV=production`.
+4. Build runs `frontend` → `backend/public`, then bundles the API to `backend/dist`. Start runs migrations and serves both.
 
 ## Demo flow
 
