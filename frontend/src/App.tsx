@@ -24,6 +24,7 @@ import {
   Textarea
 } from './components/ui';
 import { clearStoredToken, getStoredToken, request, setStoredToken } from './lib/api';
+import { DashboardView } from './components/DashboardView';
 import { fetchDashboard, fetchSessionUser, normalizeUser, signupUser } from './lib/api-compat';
 import type { Dashboard, Project, Role, SeedResponse, Task, TaskPriority, TaskStatus, User } from './lib/types';
 
@@ -750,90 +751,20 @@ function App() {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="dashboard" className="space-y-5">
-              <Card className="border-line/40 shadow-none">
-                <CardContent className="space-y-4 p-4 sm:space-y-5 sm:p-5">
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
-                    {[
-                      { label: 'Active projects', value: dashboard?.projects ?? 0, icon: LayoutDashboard },
-                      { label: 'Open tasks', value: (dashboard?.tasks ?? 0) - (dashboard?.statusCounts.Done ?? 0), icon: SquarePen },
-                      { label: 'Due soon', value: dashboard?.dueSoon ?? 0, icon: Clock3 },
-                      { label: 'Completion', value: `${dashboard?.completionRate ?? 0}%`, icon: CheckCircle2 }
-                    ].map((item) => (
-                      <div key={item.label} className="flex flex-col gap-2 rounded-md border border-line bg-panel2/60 p-4 transition hover:border-accent/30">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-md border border-accent/20 bg-accent/10 text-accent">
-                          <item.icon className="h-5 w-5" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-xs text-muted">{item.label}</p>
-                          <p className="text-xl font-semibold tabular-nums tracking-tight">{item.value}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-col gap-2 border-t border-line/40 pt-4 sm:flex-row sm:flex-wrap sm:items-center">
-                    {user.role === 'Admin' ? (
-                      <Button variant="subtle" size="sm" onClick={() => setIsProjectDialogOpen(true)}>
-                        <CirclePlus className="h-4 w-4" />
-                        New project
-                      </Button>
-                    ) : null}
-                    <Button variant="subtle" size="sm" onClick={() => void seedDemo()} disabled={saving}>
-                      <Sparkles className="h-4 w-4" />
-                      Seed demo data
-                    </Button>
-                    {selectedProject ? (
-                      <>
-                        <Button variant="subtle" size="sm" onClick={() => setWorkspaceTab('board')}>
-                          <LayoutGrid className="h-4 w-4" />
-                          Board
-                        </Button>
-                        <Button variant="subtle" size="sm" onClick={() => setWorkspaceTab('tasks')}>
-                          <SquarePen className="h-4 w-4" />
-                          All tasks
-                        </Button>
-                        {canManageSelectedProject ? (
-                          <Button variant="subtle" size="sm" onClick={() => setWorkspaceTab('team')}>
-                            <Users className="h-4 w-4" />
-                            Team
-                          </Button>
-                        ) : null}
-                      </>
-                    ) : null}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-line/40 shadow-none">
-                <CardHeader>
-                  <CardTitle>Recent activity</CardTitle>
-                  <CardDescription>Latest updates across accessible projects.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {(dashboard?.recentTasks ?? []).length ? (
-                    <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                      {(dashboard?.recentTasks ?? []).slice(0, 8).map((task) => (
-                        <li key={task.id} className="rounded-xl border border-line/40 bg-panel2/30 p-3">
-                          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
-                            <div className="min-w-0 flex-1">
-                              <p className="font-medium leading-snug text-text">{task.title}</p>
-                              <p className="mt-0.5 text-xs text-muted">{task.assignee?.name || 'Unassigned'}</p>
-                            </div>
-                            <Badge variant={task.status === 'Done' ? 'success' : 'subtle'} className="self-start sm:mt-0.5">
-                              {statusMeta[task.status].label}
-                            </Badge>
-                          </div>
-                          <p className="mt-2 text-xs text-muted">
-                            {formatDistanceToNow(new Date(task.updatedAt), { addSuffix: true })}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-muted">No recent task updates.</p>
-                  )}
-                </CardContent>
-              </Card>
+            <TabsContent value="dashboard">
+              <DashboardView
+                dashboard={dashboard}
+                userRole={user.role}
+                selectedProject={selectedProject}
+                canManageSelectedProject={canManageSelectedProject}
+                saving={saving}
+                statusMeta={statusMeta}
+                onNewProject={() => setIsProjectDialogOpen(true)}
+                onSeedDemo={() => void seedDemo()}
+                onOpenBoard={() => setWorkspaceTab('board')}
+                onOpenTasks={() => setWorkspaceTab('tasks')}
+                onOpenTeam={() => setWorkspaceTab('team')}
+              />
             </TabsContent>
 
             <TabsContent value="board">
