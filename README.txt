@@ -354,14 +354,4 @@ SUBMISSION CHECKLIST
   [ ] Railway health check passes (/api/health)
 
 
---------------------------------------------------------------------------------
-LICENSE / AUTHOR
---------------------------------------------------------------------------------
-
-  Academic assignment submission. Update author name and course details here
-  if required by your institution.
-
-  Author : _________________________________________________
-  Course : _________________________________________________
-
 ================================================================================
